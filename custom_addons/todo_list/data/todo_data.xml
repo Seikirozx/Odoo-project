@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="tag_1" model="todo.list.tag"><field name="name">Work</field></record>
+        <record id="tag_2" model="todo.list.tag"><field name="name">Event</field></record>
+        <record id="tag_3" model="todo.list.tag"><field name="name">Life achievement</field></record>
+    </data>
+</odoo>

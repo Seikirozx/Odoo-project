@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id = "view_todo_form" model="ir.ui.view">
+        <field name="name">todo.list.form</field>
+        <field name="model">todo.list</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_progress" string="In Progress" type="object" class="oe_highlight" attrs="{'invisible':[('state', '!=', 'draft')]}"/>
+                    <button name="action_done" string="Done" type="object" class="oe_highlight" attrs="{'invisible':['|',('state', '!=', 'in_progress'),('all_done','=',False)]}"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Title" attrs="{'readonly':[('state','=','complete')]}"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="tag_ids" widget="many2many_tags" attrs="{'readonly':[('state','=','complete')]}" />
+                            <field name ="all_done" invisible="1"/>
+                         </group>
+                         <group>
+                            <field name="start_date"  attrs="{'readonly':[('state','=','complete')]}" />
+                            <field name ="end_date" attrs="{'readonly':[('state','=','complete')]}" />
+                         </group>
+                    </group>
+                    <notebook>
+                        <page string="List">
+                            <field name="item_ids" attrs="{'readonly':[('state','=','complete')]}">
+                                <tree edittable = "bottom">
+                                    <field name="name"/>
+                                    <field name="description"/>
+                                    <field name="is_done" attrs="{'column_invisible':[('parent.state', '!=','in_progress')]}"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Attendee">
+                            <field name="attendee_ids" attrs="{'readonly':[('state','=','complete')]}">
+                                <tree>
+                                    <field name="name"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>        
+            </form>
+        </field>
+    </record>
+
+    <record id="view_todo_tree" model="ir.ui.view">
+        <field name="name">todo.list.tree</field>
+        <field name="model">todo.list</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="tag_ids" widget="many2many_tags"/>
+            </tree>
+        </field>
+    </record>
+    <record id="action_todo_all" model="ir.actions.act_window">
+        <field name="name">Todo List</field>
+        <field name="res_model">todo.list</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <record id="action_todo_uncomplete" model="ir.actions.act_window">
+        <field name="name">Todo List Uncomplete</field>
+        <field name="res_model">todo.list</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('state', '!=', 'complete')]</field>
+    </record>
+    <record id="action_todo_complete" model="ir.actions.act_window">
+        <field name="name">Todo List Complete</field>
+        <field name="res_model">todo.list</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('state', '=', 'complete')]</field>
+    </record>
+    <menuitem id="menu_todo_root" name="Todo List"/>
+    <menuitem id="menu_todo_all" name="Todo List" parent="menu_todo_root" action="action_todo_all" sequence="10"/>
+    <menuitem id="menu_todo_uncomplete" name="Todo List Uncomplete" parent="menu_todo_root" action="action_todo_uncomplete" sequence="20"/>
+    <menuitem id="menu_todo_complete" name="Todo List Complete" parent="menu_todo_root" action="action_todo_complete" sequence="30"/>
+</odoo>
